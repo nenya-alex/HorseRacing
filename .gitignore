@@ -1,0 +1,11 @@
+.settings/
+.classpath
+<<<<<<< HEAD
+.project
+.metadata
+=======
+.project
+bin/
+target/
+
+>>>>>>> ece0cf05ec907720487264ba1b87efcb2bfdcd4a
