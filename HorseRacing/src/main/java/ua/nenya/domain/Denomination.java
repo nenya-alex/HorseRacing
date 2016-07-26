@@ -38,8 +38,4 @@ public class Denomination {
 		return initialQuantity;
 	}
 
-	public void setInitialQuantity(int initialQuantity) {
-		this.initialQuantity = initialQuantity;
-	}
-
 }

@@ -1,16 +1,16 @@
-package ua.nenya.HorseRacing;
+package ua.nenya.main;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 
-import ua.nenya.ConsoleIOImpl.ConsoleIOImpl;
 import ua.nenya.consoleIO.ConsoleIO;
+import ua.nenya.consoleIOImpl.ConsoleIOImpl;
 import ua.nenya.domain.Denomination;
 import ua.nenya.domain.Horse;
 
-public class HorseRacing {
+public class HorseRacingRunner {
 
 	private static final String OR = "|";
 	private static final String WINNING_NUMBER_COMMAND_REGEX = "^[w,W]\\s?\\d+$";
@@ -27,7 +27,6 @@ public class HorseRacing {
 
 		try(BufferedReader br = new BufferedReader(new InputStreamReader(System.in))){
 			do {
-
 				methods.showInventoryAndHorses(notes, horses, io);
 				command = br.readLine();
 
@@ -39,10 +38,10 @@ public class HorseRacing {
 					if (methods.isCommandEqualsRegex(command, RESTORE_DENOMINATIONS_COMMAND_REGEX)) {
 						notes = methods.restoreCashInventory(notes);
 					} else {
-						if (methods.isCommandEqualsRegex(command, WINNING_NUMBER_COMMAND_REGEX)) {
+						if (methods.isCommandEqualsRegex(command, WINNING_NUMBER_COMMAND_REGEX)) {							
 							horses = methods.changeHorseWinner(command, horses, io);
 						} else {
-							if (methods.isCommandEqualsRegex(command, BETTING_COMMAND_REGEX)) {
+							if (methods.isCommandEqualsRegex(command, BETTING_COMMAND_REGEX)) {								
 								methods.checkPayout(command, horses, notes, io);
 							}
 						}

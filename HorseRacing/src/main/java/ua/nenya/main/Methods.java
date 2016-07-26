@@ -1,4 +1,4 @@
-package ua.nenya.HorseRacing;
+package ua.nenya.main;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,26 +47,29 @@ public class Methods {
 	}
 
 	public List<Denomination> restoreCashInventory(List<Denomination> notes) {
-		List<Denomination> restoringNotes = new ArrayList<>();
 		for (int i = 0; i < notes.size(); i++) {
 			Denomination denomination = notes.get(i);
 			denomination.setQuantity(denomination.getInitialQuantity());
-			restoringNotes.add(denomination);
 		}
-		return restoringNotes;
+		return notes;
 	}
 
 	public List<Horse> changeHorseWinner(String command, List<Horse> horses, ConsoleIO io) {
 		int number = Integer.valueOf(command.substring(1).trim());
-
 		if (isHorseExists(number, horses)) {
-			horses = setWinningHorseNumber(horses, number);
+			for (Horse it: horses) {
+				if (it.getNumber() == number) {
+					it.setDidWin(WON);
+				} else {
+					it.setDidWin(LOST);
+				}
+			}
 		} else {
 			io.writeln(INVALID_HORSE_NUMBER + number);
 		}
 		return horses;
 	}
-
+	
 	public void checkPayout(String command, List<Horse> horses, List<Denomination> notes, ConsoleIO io) {
 
 		List<String> commands = new ArrayList<>(Arrays.asList(command.split(BLANK)));
@@ -85,6 +88,21 @@ public class Methods {
 		}
 	}
 	
+	private void doPayout(int number, int bet, List<Horse> horses, List<Denomination> notes, ConsoleIO io) {
+
+		long totalSum = getTotalSum(notes);
+		Horse horse = getHorse(number, horses);
+
+		if (bet * horse.getOdds() <= totalSum) {
+			long payout = horse.getOdds() * bet;
+			io.writeln(PAYOUT + horse.getName() + COMA_DOLLAR + payout);
+			List<Denomination> bills = countBills(payout, notes);
+			showDispensing(bills, io);
+		} else {
+			io.writeln(INSUFFICIENT_FUNDS + getHorse(number, horses).getOdds() * bet);
+		}
+	}
+
 	private void showDispensing(List<Denomination> notes, ConsoleIO io) {
 		io.writeln(DISPENSING);
 		
@@ -104,21 +122,6 @@ public class Methods {
 		return horses.get(index);
 	}
 
-	private List<Horse> setWinningHorseNumber(List<Horse> horses, int number) {
-		List<Horse> newHorses = new ArrayList<>();
-
-		for (int i = 0; i < horses.size(); i++) {
-			Horse horse = horses.get(i);
-			if (horse.getNumber() == number) {
-				horse.setDidWin(WON);
-			} else {
-				horse.setDidWin(LOST);
-			}
-			newHorses.add(horse);
-		}
-		return newHorses;
-	}
-
 	private boolean isHorseWinner(int number, List<Horse> horses) {
 		for (Horse it : horses) {
 			if (it.getNumber() == number) {
@@ -135,21 +138,6 @@ public class Methods {
 			}
 		}
 		return false;
-	}
-
-	private void doPayout(int number, int bet, List<Horse> horses, List<Denomination> notes, ConsoleIO io) {
-
-		long totalSum = getTotalSum(notes);
-		Horse horse = getHorse(number, horses);
-
-		if (bet * horse.getOdds() <= totalSum) {
-			long payout = horse.getOdds() * bet;
-			io.writeln(PAYOUT + horse.getName() + COMA_DOLLAR + payout);
-			List<Denomination> bills = countBills(payout, notes);
-			showDispensing(bills, io);
-		} else {
-			io.writeln(INSUFFICIENT_FUNDS + getHorse(number, horses).getOdds() * bet);
-		}
 	}
 
 	private List<Denomination> countBills(long payout, List<Denomination> notes) {
@@ -192,4 +180,5 @@ public class Methods {
 		}
 		return sum;
 	}
+	
 }
