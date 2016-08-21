@@ -14,7 +14,6 @@ public class App {
 
 		HorseRacingInitilizer horseRacingInitilizer = new HorseRacingInitilizer();
 		Racing racing = horseRacingInitilizer.initRacing();
-
 		new HorseRacingRunner().run(racing.getNotes(), racing.getHorses(), io, br);
 	}
 
